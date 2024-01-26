@@ -1,0 +1,23 @@
+{% for message in messages %}
+    {% if message.tags == "info" %}
+        <div class="info_massage " role="alert">
+            <h3>{{ message }}</h3>
+        </div>
+    {% elif message.tags == 'error' %}
+        <div class="error_massage" role="alert">
+            {{ message }}
+        </div>
+    {% elif message.tags == 'warning' %}
+        <div class="warning_massage" role="alert">
+            {{ message }}
+        </div>
+    {% elif message.tags == 'success' %}
+        <div class="success_massage" role="alert">
+            <h3>{{ message }}</h3>
+        </div>
+    {% else %}
+        <div class="dark_massage" role="alert">
+            {{ message }}
+        </div>
+    {% endif %}
+{% endfor %}

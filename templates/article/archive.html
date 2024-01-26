@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content0 %}
+    {% if cat %}
+        Categories {{ cat }} {% for category in categories %}
+        {% if cat == category.name %}
+            ({{ category.articles.count }})
+        {% endif %}
+    {% endfor %}
+    {% elif tag %}
+        Tags {{ tag }} {% for tag1 in tags %}
+        {% if tag == tag1.name %}
+            ({{ tag1.article_set.count }})
+        {% endif %}
+
+    {% endfor %}
+    {% else %}
+        POST ARTICLE
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+
+    <section class="all_post archive_post">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="row">
+                        {#    ------------------------------------------------------------------------------------------#}
+                        {% for object in object_list %}
+
+
+
+                            <div class="col-lg-6">
+                                <div class="single_catagory_post post_2">
+                                    <div class="category_post_img">
+                                        <img src="{{ object.image.url }}" alt><br>
+                                        <a href="{% url 'article:list_articles' %}?cat={{ object.category.name }}"
+                                           class="category_btn ">{{ object.category.name }}</a>
+                                    </div>
+                                    <div class="post_text_1 pr_30">
+                                        <p><span> By {{ object.author }}</span>
+                                            / {{ object.created_date|date:"F d, Y" }}</p>
+                                        <a href="{% url 'article:detail_articles' object.slug %}">
+                                            <h3>{{ object.name }}</h3>
+                                        </a>
+                                        <div class="post_icon">
+                                            <ul>
+                                                <li><i class="ti-comment"></i>{{ object.comments.count }} Comment</li>
+                                                <li><i class="ti-heart"></i>999 Like</li>
+                                                <li><i class="ti-export"></i>Share</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        {% endfor %}
+                        {#    -------------------------------------------------------------------------------------------#}
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="sidebar_widget">
+                        <div class="sidebar_tittle">
+                            <h3>Search Objects</h3>
+                        </div>
+                        <form action="{% url 'article:list_articles' %}" method="get">
+                            <div class="form-group">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="q" class="form-control" placeholder="Search Keyword"
+                                           onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search Keyword'">
+                                    <div class="input-group-append">
+                                        <button class="btn" type="submit"><i class="ti-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="sidebar_tittle">
+                            <h3>Popular Feeds</h3>
+                        </div>
+                        {#                            ---------------------------------------------------------------------------------------------------------#}
+                        {% for foo in articles_2 %}
+
+
+
+                            <div class="single_catagory_post post_2 single_border_bottom">
+                                <div class="category_post_img">
+                                    <img src="{{ foo.image.url }}" alt>
+                                </div>
+                                <div class="post_text_1 pr_30">
+                                    <p><span> By {{ foo.author }}</span> / {{ foo.created_date|date:"F d, Y" }}</p>
+                                    <a href="{% url 'article:detail_articles' foo.slug %}">
+                                        <h3>{{ foo.name }}</h3>
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {#                            ---------------------------------------------------------------------------------#}
+                        <div class="sidebar_tittle">
+                            <h3>Categories</h3>
+                        </div>
+                        <div class="single_catagory_item category">
+                            <ul class="list-unstyled">
+
+                                {% for category in categories %}
+                                    <li>
+                                        <a href="{% url 'article:list_articles' %}?cat={{ category.name }}">{{ category.name }}
+                                            ({{ category.articles.count }})
+                                        </a></li>
+
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="sidebar_tittle">
+                            <h3>Popular Tags</h3>
+                        </div>
+                        <div class="single_catagory_item tags">
+                            <ul class="list-unstyled">
+                                {% for tag in tags %}
+                                    <li><a href="{% url 'article:list_articles' %}?tag={{ tag.name }}">{{ tag.name }}
+                                        ({{ tag.article_set.count }})</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
