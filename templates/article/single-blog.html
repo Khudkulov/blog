@@ -113,7 +113,7 @@
                                 <a href="{% url 'article:list_articles' %}?search_author={{ article.author.name }}">
                                     <h4>{{ article.author }}</h4>
                                 </a>
-                                <p>{{ article.author.bio|safe }}</p>
+                                <p>{{ article.author.bio|safe|slice:'100' }}...</p>
                             </div>
                         </div>
                     </div>
@@ -129,7 +129,7 @@
                                             </div>
                                             <div class="desc">
                                                 <p class="comment">
-                                                    {{ comment.message }}
+                                                    {{ comment.message|slice:'100' }}
                                                 </p>
                                                 <div class="d-flex justify-content-between">
                                                     <div class="d-flex align-items-center">
