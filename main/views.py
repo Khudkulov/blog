@@ -13,7 +13,7 @@ def home_view(request):
         add.append(comment_piece)
         add.sort()
         add.reverse()
-        print(add)
+        # print(add)
     max_articles = []
     for i in add[:3]:
         for article in articles:
