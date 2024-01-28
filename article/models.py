@@ -50,8 +50,8 @@ class Content(models.Model):
 
 
 class Comment(models.Model):
-    # parent = models.ForeignKey('self', on_delete=models.SET_NULL, related_name='parent', null=True, blank=True)
-    # top_comment = models.IntegerField()
+    parent = models.ForeignKey('self', on_delete=models.SET_NULL, related_name='parents', null=True, blank=True)
+    top_comment = models.IntegerField(null=True, blank=True)
     article = models.ForeignKey(Article, on_delete=models.CASCADE, null=True, blank=True, related_name='comments')
     name = models.CharField(max_length=123)
     email = models.EmailField()
@@ -60,27 +60,28 @@ class Comment(models.Model):
     image = models.ImageField(upload_to='article/comment', null=True, blank=True)
     created_date = models.DateTimeField(auto_now=True)
 
+    @property
+    def children(instance, *args, **kwargs):
+        if not instance.top_comment:
+            children_1 = Comment.objects.filter(top_comment=instance.id)
+            return children_1
+        else:
+            return None
+
 
 def article_pre_save(sender, instance, *args, **kwargs):
     if not instance.slug:
         instance.slug = slugify(instance.name + "-" + str(timezone.now().date()))
 
 
-# def comment_pre_save(sender, instance, *args, **kwargs):
-#     if instance.parent:
-#         parent = instance.parent
-#         if parent.top_comment:
-#             instance.top_comment = parent.top_comment.id
-#         else:
-#             instance.top_comment = parent.id
+def comment_pre_save(sender, instance, *args, **kwargs):
+    if instance.parent:
+        if instance.parent.top_comment:
+            instance.top_comment = instance.parent.top_comment
+        else:
+            instance.top_comment = instance.parent.id
 
 
-# def children(sender, instance, *args, **kwargs):
-#     if not instance.top_comment:
-#         children_1 = Comment.objects.filter(top_comment=instance.id)
-#         return children_1
-#     else:
-#         return None
-
+pre_save.connect(comment_pre_save, sender=Comment)
 
 pre_save.connect(article_pre_save, sender=Article)

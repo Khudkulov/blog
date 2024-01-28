@@ -41,6 +41,8 @@ def list_articles_view(request):
 
 
 def detail_articles_view(request, slug):
+    pid = request.GET.get('pid')
+
     articles = Article.objects.order_by('id')
     articles_2 = Article.objects.order_by('-id')[3:]
     categories = Category.objects.all()
@@ -52,9 +54,13 @@ def detail_articles_view(request, slug):
         form = CommentForm(request.POST, files=request.FILES)
         if form.is_valid():
             obj = form.save(commit=False)
+            if pid:
+                print(pid)
+                obj.parent = Comment.objects.get(id=pid)
             obj.article = article
             obj.save()
             messages.success(request, 'You have successfully commentary')
+            return redirect('article:detail_articles', slug=slug)
     add = []
     for i in articles:
         add.append(i)
