@@ -24,8 +24,8 @@ def home_view(request):
     tags = Tag.objects.all()
     articles_2 = Article.objects.order_by('-id')[3:]
     import random
-    article_random = Article.objects.order_by('id')[random.randint(0, len(Article.objects.order_by('id'))-1)]
-
+    article_random = Article.objects.order_by('-id')[random.randint(0, len(Article.objects.order_by('id')) - 1)]
+    # [random.randint(0, len(Article.objects.order_by('id')) - 1)]
     context = {
         'object_list': articles,
         'categories': categories,
