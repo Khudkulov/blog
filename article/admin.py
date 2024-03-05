@@ -16,8 +16,8 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
-    search_fields = ('name',)
+    list_display = ('id', 'user')
+    search_fields = ('user',)
 
 
 class ContentInline(admin.TabularInline):

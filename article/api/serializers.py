@@ -1,7 +1,25 @@
 from rest_framework import serializers
-from article.models import Article
+from article.models import Article, Author, Content, Tag, Category
 from rest_framework.validators import ValidationError
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
+
+class ArticleTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = '__all__'
+
+
+class ArticleCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
+class ArticleContentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Content
+        fields = ['id', 'content',]
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -10,22 +28,33 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', "last_login", "date_joined"]
 
 
+class AuthorUserSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Author
+        fields = ['id', 'user', 'image', 'bio']
+
+
 class ArticleSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
+    author = AuthorUserSerializer(read_only=True)
+    content = ArticleContentSerializer(read_only=True, many=True)
+    category = ArticleCategorySerializer(read_only=True)
+    tags = ArticleTagSerializer(read_only=True, many=True)
 
     class Meta:
         model = Article
-        fields = ['id', 'author', 'name', 'image', 'created_date']
+        fields = ['id', 'author', 'name', 'image', 'content', 'created_date', 'tags', 'category']
 
     def validate(self, attrs):
         exp = {}
-        title = attrs.get('title')
-        content = attrs.get('title')
-        if not title[0].isupper():
-            exp['title'] = []
-            exp["title"].append("Title must be capitalize")
-        if not content[0].isupper():
-            exp["content"] = "Content must be capitalize"
+        name = attrs.get('name')
+        # content = attrs.get('name')
+        if not name[0].isupper():
+            exp['name'] = []
+            exp["name"].append("Title must be capitalize")
+        # if not content[0].isupper():
+        #     exp["content"] = "Content must be capitalize"
         # if self.Meta.model.objects.filter(title=title).exists():
         #     exp['title'].append('title already exist')
         if exp:
@@ -34,13 +63,18 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_id = self.context['user_id']
-        validated_data['author_id'] = user_id
-        print(user_id)
+        author = get_object_or_404(Author, user_id=user_id)
+        validated_data['author'] = author
         return super().create(validated_data)
 
 
-class ArticlePostSerializer(serializers.ModelSerializer):
+# class ArticlePostSerializer(serializers.ModelSerializer):
+#     author = UserSerializer()
+#
+#     class Meta:
+#         model = Article
+#         fields = ['id', 'author', 'name', 'image', 'created_date']
 
-    class Meta:
-        model = Article
-        fields = ['id', 'author', 'name', 'image', 'created_date']
+
+
+

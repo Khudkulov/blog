@@ -110,7 +110,7 @@
                         <div class="media align-items-center">
                             <img src="{{ article.author.image.url }}" alt>
                             <div class="media-body">
-                                <a href="{% url 'article:list_articles' %}?search_author={{ article.author.name }}">
+                                <a href="{% url 'article:list_articles' %}?search_author={{ article.author.user.username }}">
                                     <h4>{{ article.author }}</h4>
                                 </a>
                                 <p>{{ article.author.bio|safe|slice:'100' }}...</p>
@@ -263,7 +263,7 @@
                                     <img src="{{ foo.image.url }}" alt>
                                 </div>
                                 <div class="post_text_1 pr_30">
-                                    <p><span>{{ foo.author.name }}</span> /{{ foo.created_date|date:"F d, Y" }}</p>
+                                    <p><span>{{ foo.author.user.username }}</span> /{{ foo.created_date|date:"F d, Y" }}</p>
                                     <a href="{% url 'article:detail_articles' foo.slug %}">
                                         <h3>{{ foo.name }}</h3>
                                     </a>

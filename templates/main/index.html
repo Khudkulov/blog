@@ -61,7 +61,7 @@
                                 <a href="{% url 'article:list_articles' %}?cat={{ object.category.name }}" class="category_btn">{{ object.category.name|slice:'15' }}...</a>
                             </div>
                             <div class="post_text_1 pr_30">
-                                <p><span> By {{ object.author.name }}</span> / {{ object.created_date|date:"F d, Y" }}</p>
+                                <p><span> By {{ object.author.user.username }}</span> / {{ object.created_date|date:"F d, Y" }}</p>
                                 <a href="{% url 'article:detail_articles' object.slug %}">
                                     <h3>{{ object.name|slice:'50' }}...</h3>
                                 </a>
@@ -150,7 +150,7 @@
                                 <img src="{{ foo.image.url }}" alt>
                             </div>
                             <div class="post_text_1 pr_30">
-                                <p><span> By {{ foo.author.name }}</span> / {{ foo.created_date|date:"F d, Y" }}</p>
+                                <p><span> By {{ foo.author.user.username }}</span> / {{ foo.created_date|date:"F d, Y" }}</p>
                                 <a href="{% url 'article:detail_articles' foo.slug %}">
                                     <h3>{{ foo.name|slice:'30' }}...</h3>
                                 </a>

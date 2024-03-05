@@ -26,7 +26,7 @@ def list_articles_view(request):
 
     query = request.GET.get('search_author')
     if query:
-        query_condition = Q(author__name__icontains=query)
+        query_condition = Q(author__user__username__icontains=query)
         articles = Article.objects.filter(query_condition,).order_by('-id')
 
     context = {

@@ -42,7 +42,7 @@
                                            class="category_btn ">{{ object.category.name }}</a>
                                     </div>
                                     <div class="post_text_1 pr_30">
-                                        <p><span> By {{ object.author }}</span>
+                                        <p><span> By {{ object.author.user.username }}</span>
                                             / {{ object.created_date|date:"F d, Y" }}</p>
                                         <a href="{% url 'article:detail_articles' object.slug %}">
                                             <h3>{{ object.name }}</h3>
@@ -92,7 +92,7 @@
                                     <img src="{{ foo.image.url }}" alt>
                                 </div>
                                 <div class="post_text_1 pr_30">
-                                    <p><span> By {{ foo.author }}</span> / {{ foo.created_date|date:"F d, Y" }}</p>
+                                    <p><span> By {{ foo.author.user.username }}</span> / {{ foo.created_date|date:"F d, Y" }}</p>
                                     <a href="{% url 'article:detail_articles' foo.slug %}">
                                         <h3>{{ foo.name }}</h3>
                                     </a>

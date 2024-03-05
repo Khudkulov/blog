@@ -1,10 +1,11 @@
+from django.contrib.auth.models import User
 from django.db import models
 from ckeditor.fields import RichTextField
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.db.models.signals import pre_save
 from django.utils import timezone
-
+import datetime
 
 class Category(models.Model):
     name = models.CharField(max_length=123)
@@ -21,12 +22,12 @@ class Tag(models.Model):
 
 
 class Author(models.Model):
-    name = models.CharField(max_length=123)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='article/author/')
     bio = RichTextField()
 
     def __str__(self):
-        return self.name
+        return self.user.username
 
 
 class Article(models.Model):
@@ -71,7 +72,7 @@ class Comment(models.Model):
 
 def article_pre_save(sender, instance, *args, **kwargs):
     if not instance.slug:
-        instance.slug = slugify(instance.name + "-" + str(timezone.now().date()))
+        instance.slug = slugify(instance.name + "-" + str(datetime.datetime.now()))
 
 
 def comment_pre_save(sender, instance, *args, **kwargs):
