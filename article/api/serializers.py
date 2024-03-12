@@ -1,8 +1,15 @@
 from rest_framework import serializers
-from article.models import Article, Author, Content, Tag, Category
+from article.models import Article, Author, Content, Tag, Category, Comment
 from rest_framework.validators import ValidationError
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
+
+
+class ArticleCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'
+
 
 class ArticleTagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,7 +26,7 @@ class ArticleCategorySerializer(serializers.ModelSerializer):
 class ArticleContentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Content
-        fields = ['id', 'content',]
+        fields = ['id', 'content', 'checkbox']
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -38,13 +45,14 @@ class AuthorUserSerializer(serializers.ModelSerializer):
 
 class ArticleSerializer(serializers.ModelSerializer):
     author = AuthorUserSerializer(read_only=True)
-    content = ArticleContentSerializer(read_only=True, many=True)
+    contents = ArticleContentSerializer(read_only=True, many=True)
     category = ArticleCategorySerializer(read_only=True)
     tags = ArticleTagSerializer(read_only=True, many=True)
+    comments = ArticleCommentSerializer(read_only=True, many=True)
 
     class Meta:
         model = Article
-        fields = ['id', 'author', 'name', 'image', 'content', 'created_date', 'tags', 'category']
+        fields = ['id', 'author', 'name', 'image', 'contents', 'created_date', 'tags', 'category', 'comments']
 
     def validate(self, attrs):
         exp = {}
